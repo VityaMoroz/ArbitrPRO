@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>АрбитрПро — Калькулятор отдела АУ</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #19322E;
+    color: #F7EBDD;
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+    background: radial-gradient(circle at 50% 30%, #21433d 0%, #19322E 72%);
+}
+
+.hero-kicker {
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #BEAC8C;
+    font-weight: 800;
+    margin-bottom: 22px;
+}
+
+.hero h1 {
+    font-size: clamp(34px, 8vw, 56px);
+    line-height: 1.08;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 22px;
+    color: #F7EBDD;
+}
+
+.hero h1 span {
+    color: #BEAC8C;
+}
+
+.hero p {
+    font-size: clamp(16px, 4vw, 19px);
+    max-width: 680px;
+    margin: 0 auto 18px;
+    opacity: 0.88;
+    line-height: 1.55;
+}
+
+.hero-subtitle {
+    font-size: clamp(14px, 3.5vw, 17px) !important;
+    opacity: 0.68 !important;
+    margin-bottom: 36px !important;
+}
+
+.btn-main {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 58px;
+    padding: 18px 34px;
+    border-radius: 16px;
+    background: #BEAC8C;
+    color: #19322E;
+    font-size: 17px;
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: 0 14px 34px rgba(190, 172, 140, 0.28);
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 18px 70px;
+}
+
+.page-title {
+    font-size: clamp(28px, 6vw, 38px);
+    line-height: 1.12;
+    font-weight: 900;
+    color: #F7EBDD;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+.page-title span {
+    color: #BEAC8C;
+}
+
+.subtitle {
+    font-size: 16px;
+    opacity: 0.72;
+    margin-bottom: 24px;
+    line-height: 1.55;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(190, 172, 140, 0.18);
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 22px;
+}
+
+.card h2 {
+    font-size: clamp(21px, 5vw, 27px);
+    line-height: 1.18;
+    font-weight: 900;
+    color: #BEAC8C;
+    margin-bottom: 18px;
+    letter-spacing: -0.01em;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #F7EBDD;
+    letter-spacing: 0.01em;
+}
+
+.input-group input {
+    width: 100%;
+    min-height: 54px;
+    padding: 15px 16px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(190, 172, 140, 0.24);
+    background: rgba(0, 0, 0, 0.24);
+    color: #F7EBDD;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 800;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #BEAC8C;
+    background: rgba(0, 0, 0, 0.34);
+}
+
+.calc-output {
+    width: 100%;
+    min-height: 54px;
+    padding: 15px 16px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(190, 172, 140, 0.18);
+    background: rgba(190, 172, 140, 0.10);
+    color: #BEAC8C;
+    font-size: clamp(16px, 4.5vw, 18px);
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.hint {
+    font-size: 12px;
+    color: rgba(247, 235, 221, 0.48);
+    margin-top: 6px;
+    font-style: italic;
+    line-height: 1.35;
+}
+
+.divider {
+    height: 1px;
+    background: rgba(190, 172, 140, 0.16);
+    margin: 22px 0;
+}
+
+.cb-input {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.cb-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 58px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+    border: 1.5px solid rgba(190, 172, 140, 0.16);
+    background: rgba(190, 172, 140, 0.045);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.cb-label:active {
+    background: rgba(190, 172, 140, 0.09);
+}
+
+.cb-label::before {
+    content: "";
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    border: 2px solid rgba(190, 172, 140, 0.42);
+    background: rgba(0, 0, 0, 0.20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #19322E;
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.cb-text {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 800;
+    color: #F7EBDD;
+    line-height: 1.35;
+}
+
+.cb-input:checked + .cb-label {
+    border-color: #BEAC8C;
+    background: rgba(190, 172, 140, 0.10);
+}
+
+.cb-input:checked + .cb-label::before {
+    content: "✓";
+    background: #BEAC8C;
+    border-color: #BEAC8C;
+}
+
+.cb-input:checked + .cb-label .cb-text {
+    color: #F7EBDD;
+}
+
+.extra-fields {
+    display: none;
+    margin: -2px 0 16px;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.18);
+    border-left: 3px solid #BEAC8C;
+}
+
+.cb-input:checked + .cb-label + .extra-fields {
+    display: block;
+}
+
+.two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 22px 0;
+}
+
+.summary-card {
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(190, 172, 140, 0.18);
+    border-radius: 18px;
+    padding: 22px 18px;
+    text-align: center;
+}
+
+.summary-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.62;
+    font-weight: 900;
+    margin-bottom: 10px;
+    line-height: 1.35;
+}
+
+.summary-card .value {
+    font-size: clamp(28px, 6vw, 38px);
+    font-weight: 900;
+    line-height: 1;
+    margin: 10px 0;
+    letter-spacing: -0.02em;
+}
+
+.value.red {
+    color: #C25B4E;
+}
+
+.value.green {
+    color: #5FA97E;
+}
+
+.value.checkmark {
+    color: #5FA97E;
+    font-size: clamp(42px, 9vw, 58px);
+}
+
+.summary-card .sub {
+    font-size: 12px;
+    opacity: 0.55;
+    margin-top: 8px;
+    line-height: 1.35;
+}
+
+.summary-card .sub.profit {
+    opacity: 0.82;
+    color: #5FA97E;
+    font-weight: 800;
+}
+
+.result {
+    border-radius: 22px;
+    padding: 28px 22px;
+    text-align: center;
+    border: 2px solid #C25B4E;
+    background: rgba(194, 91, 78, 0.10);
+}
+
+.result.positive {
+    border-color: #5FA97E;
+    background: rgba(95, 169, 126, 0.10);
+}
+
+.result .result-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 900;
+    opacity: 0.82;
+    margin-bottom: 12px;
+    line-height: 1.35;
+}
+
+.result .result-amount {
+    font-size: clamp(42px, 11vw, 68px);
+    font-weight: 900;
+    line-height: 1;
+    color: #C25B4E;
+    margin-bottom: 12px;
+    letter-spacing: -0.03em;
+}
+
+.result.positive .result-amount {
+    color: #5FA97E;
+}
+
+.result .result-yearly {
+    font-size: clamp(22px, 5vw, 30px);
+    font-weight: 900;
+    color: #C25B4E;
+    line-height: 1.2;
+}
+
+.result.positive .result-yearly {
+    color: #5FA97E;
+}
+
+.result .result-note {
+    font-size: 14px;
+    opacity: 0.66;
+    margin-top: 14px;
+    line-height: 1.45;
+}
+
+.benefits {
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(95, 169, 126, 0.08);
+    border-left: 3px solid #5FA97E;
+}
+
+.benefits h4 {
+    color: #5FA97E;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.benefits ul {
+    list-style: none;
+}
+
+.benefits li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    opacity: 0.86;
+    line-height: 1.45;
+}
+
+.benefits li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #5FA97E;
+}
+
+.disclaimer {
+    margin-top: 34px;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.45;
+    opacity: 0.42;
+    padding: 0 8px;
+}
+
+.browser-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(8, 18, 16, 0.86);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.browser-gate.gate-show {
+    display: flex;
+}
+
+.browser-gate-btn {
+    min-width: 260px;
+    min-height: 68px;
+    padding: 20px 34px;
+    border: none;
+    border-radius: 20px;
+    background: #BEAC8C;
+    color: #19322E;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
+}
+
+.browser-gate-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 34px 14px 60px;
+    }
+
+    .card {
+        padding: 18px;
+        border-radius: 18px;
+    }
+
+    .summary {
+        grid-template-columns: 1fr;
+    }
+
+    .two-cols {
+        grid-template-columns: 1fr;
+    }
+
+    .cb-label {
+        padding: 15px 14px;
+    }
+
+    .extra-fields {
+        padding: 14px;
+    }
+
+    .browser-gate-btn {
+        width: 100%;
+        min-width: 0;
+    }
+}
+</style>
+</head>
+<body>
+
+<div id="browserGate" class="browser-gate">
+    <button type="button" class="browser-gate-btn" onclick="openInBrowser()">Открыть в браузере</button>
+</div>
+
+<section class="hero">
+    <div class="hero-kicker">Инструмент для руководителей</div>
+    <h1>Калькулятор<br><span>отдела АУ</span></h1>
+    <p>
+        Посчитайте реальную стоимость содержания собственного направления арбитражных управляющих — от зарплат и налогов до судебных расходов, компенсаций из конкурсной массы и возвратов депозитов.
+    </p>
+    <p class="hero-subtitle">
+        Многоконтурный учёт, который многие считают «на глазок», здесь считается до рубля. Введите Ваши данные и узнайте, сколько реально обходится Ваше направление АУ — и сколько Вы могли бы зарабатывать, передав дела на аутсорс.
+    </p>
+    <a class="btn-main" href="#calculator">Посчитать экономику ↓</a>
+</section>
+
+<div class="container" id="calculator">
+    <h1 class="page-title">Сколько реально стоит <span>Ваш отдел АУ</span></h1>
+    <p class="subtitle">
+        Введите данные по Вашему направлению — калькулятор автоматически покажет чистые затраты, доход с АрбитрПро и Ваши ежемесячные потери.
+    </p>
+
+    <div class="card">
+        <h2>Расходы на содержание</h2>
+
+        <div class="input-group">
+            <label for="salary">Официальная зарплата АУ в месяц, ₽</label>
+            <input type="text" id="salary" value="80000" inputmode="numeric"
+                   oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+            <div class="hint">Укажите сумму до вычета налогов</div>
+        </div>
+
+        <div class="input-group">
+            <label>Налоги на зарплату (~30%)</label>
+            <div class="calc-output" id="taxesOut">24 000 ₽</div>
+            <div class="hint">Рассчитывается автоматически</div>
+        </div>
+
+        <div class="input-group">
+            <label for="office">Расходы на офис в месяц, ₽</label>
+            <input type="text" id="office" value="15000" inputmode="numeric"
+                   oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+            <div class="hint">Аренда, коммунальные услуги, мебель</div>
+        </div>
+
+        <div class="input-group">
+            <label for="transport">Транспортные и прочие расходы, ₽</label>
+            <input type="text" id="transport" value="10000" inputmode="numeric"
+                   oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+            <div class="hint">ГСМ, командировки, канцелярия</div>
+        </div>
+
+        <div class="input-group">
+            <label for="phone">Расходы на связь, ₽</label>
+            <input type="text" id="phone" value="3000" inputmode="numeric"
+                   oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+            <div class="hint">Мобильная связь, интернет</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="input-group">
+            <label for="cases">Количество дел в работе</label>
+            <input type="text" id="cases" value="20" inputmode="numeric"
+                   oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+            <div class="hint">Сколько дел Ваш АУ берёт в работу ежемесячно</div>
+        </div>
+
+        <div class="input-group">
+            <label for="avgCourtFee">Средние судебные расходы на 1 дело, ₽</label>
+            <input type="text" id="avgCourtFee" value="25000" inputmode="numeric"
+                   oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+            <div class="hint">Публикации, почта, банковские расходы × количество дел</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <input class="cb-input" type="checkbox" id="chkKm" onchange="safeRecalc()" onclick="safeRecalc()">
+        <label class="cb-label" for="chkKm">
+            <span class="cb-text">Компенсируем расходы из КМ</span>
+        </label>
+        <div class="extra-fields" id="kmFields">
+            <div class="input-group">
+                <label for="kmCompensation">Сумма компенсации за месяц, ₽</label>
+                <input type="text" id="kmCompensation" value="50000" inputmode="numeric"
+                       oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+                <div class="hint">Сколько удаётся вернуть из конкурсной массы — уменьшает расходы</div>
+            </div>
+        </div>
+
+        <input class="cb-input" type="checkbox" id="chkDeposit" onchange="safeRecalc()" onclick="safeRecalc()">
+        <label class="cb-label" for="chkDeposit">
+            <span class="cb-text">Возвращаем депозиты из суда</span>
+        </label>
+        <div class="extra-fields" id="depositFields">
+            <div class="two-cols">
+                <div class="input-group">
+                    <label for="depReturned">Вернулись, кол-во дел</label>
+                    <input type="text" id="depReturned" value="0" inputmode="numeric"
+                           oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+                    <div class="hint" id="depReturnedHint">+ 0 ₽ — уменьшает расходы</div>
+                </div>
+                <div class="input-group">
+                    <label for="depNotReturned">Не вернулись, кол-во дел</label>
+                    <input type="text" id="depNotReturned" value="0" inputmode="numeric"
+                           oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+                    <div class="hint" id="depNotReturnedHint">− 0 ₽ — увеличивает расходы</div>
+                </div>
+            </div>
+            <div class="hint">Расчёт: 25 000 ₽ за каждое дело</div>
+        </div>
+
+        <input class="cb-input" type="checkbox" id="chkFinance" onchange="safeRecalc()" onclick="safeRecalc()">
+        <label class="cb-label" for="chkFinance">
+            <span class="cb-text">Есть ли финансовый отдел</span>
+        </label>
+        <div class="extra-fields" id="financeFields">
+            <div class="input-group">
+                <label for="financeCost">Трат в месяц на фин. отдел, ₽</label>
+                <input type="text" id="financeCost" value="30000" inputmode="numeric"
+                       oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+                <div class="hint">Бухгалтерия, учёт, отчётность</div>
+            </div>
+        </div>
+
+        <input class="cb-input" type="checkbox" id="chkWalkers" onchange="safeRecalc()" onclick="safeRecalc()">
+        <label class="cb-label" for="chkWalkers">
+            <span class="cb-text">Есть ли «Ходоки» в банки</span>
+        </label>
+        <div class="extra-fields" id="walkersFields">
+            <div class="input-group">
+                <label for="walkersCost">Трат в месяц на ходоков, ₽</label>
+                <input type="text" id="walkersCost" value="20000" inputmode="numeric"
+                       oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+                <div class="hint">Сотрудники для получения ПМ</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <input class="cb-input" type="checkbox" id="chkReward" onchange="safeRecalc()" onclick="safeRecalc()">
+        <label class="cb-label" for="chkReward">
+            <span class="cb-text">Вознаграждение АУ с реализации</span>
+        </label>
+        <div class="extra-fields" id="rewardFields">
+            <div class="input-group">
+                <label for="rewardAmount">Сумма в месяц, ₽</label>
+                <input type="text" id="rewardAmount" value="100000" inputmode="numeric"
+                       oninput="safeRecalc()" onchange="safeRecalc()" onkeyup="safeRecalc()" onblur="safeRecalc()">
+                <div class="hint">Доход Вашего АУ от продажи имущества — уменьшает расходы</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Ваш доход с АрбитрПро</h2>
+
+        <div class="input-group">
+            <label>Бонус за каждое дело, ₽</label>
+            <div class="calc-output" id="bonusPerCaseOut">2 000 ₽</div>
+            <div class="hint">2 000 ₽ при объёме до 49 дел, 3 000 ₽ при 50+</div>
+        </div>
+
+        <div class="input-group">
+            <label>Бонусами в месяц, ₽</label>
+            <div class="calc-output" id="bonusTotalOut">40 000 ₽</div>
+            <div class="hint">Количество дел × бонус за дело</div>
+        </div>
+
+        <div class="input-group">
+            <label>Кэшбек с реализации, ₽/мес</label>
+            <div class="calc-output" id="cashbackOut">80 000 ₽</div>
+            <div class="hint">≈ 4 000 ₽ с каждого дела в среднем</div>
+        </div>
+
+        <div class="input-group">
+            <label>Итого доход с АрбитрПро, ₽/мес</label>
+            <div class="calc-output" id="earnArbitrProOut">120 000 ₽</div>
+            <div class="hint">Бонусы + кэшбек = Ваш доход с АрбитрПро</div>
+        </div>
+
+        <div class="benefits">
+            <h4>Что Вы получаете с АрбитрПро</h4>
+            <ul>
+                <li>6 АУ + 3 в запасе — скамейка подстрахует в любой ситуации</li>
+                <li>60+ специалистов — каждый на своём участке</li>
+                <li>ПМ в течение 3 рабочих дней после поступления денег</li>
+                <li>Контроль качества по 90%+ направлений</li>
+                <li>Личный кабинет и онлайн-сверка по оплатам</li>
+                <li>Ответственность по сложным кейсам и будущим делам</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="summary">
+        <div class="summary-card">
+            <div class="label">Чистые затраты на Ваш отдел АУ</div>
+            <div class="value red" id="totalExpensesValue">632 000 ₽</div>
+            <div class="sub" id="totalExpensesSub">расходы минус компенсации и доход</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Ваш доход с АрбитрПро</div>
+            <div class="value green" id="totalEarnings">120 000 ₽</div>
+            <div class="sub">в месяц</div>
+        </div>
+    </div>
+
+    <div class="result" id="resultBox">
+        <div class="result-label" id="resultLabel">Вы теряете каждый месяц</div>
+        <div class="result-amount" id="resultAmount">752 000 ₽</div>
+        <div class="result-yearly" id="resultYearly">За год: 9 024 000 ₽</div>
+        <div class="result-note" id="resultNote">
+            Это сумма чистых затрат на Ваш отдел АУ + доход, который Вы могли бы получать с АрбитрПро.
+        </div>
+    </div>
+
+    <div class="disclaimer">
+        * Данный расчёт является приблизительным и опирается только на внесённые Вами цифры. Фактические результаты могут отличаться в зависимости от конкретных условий и обстоятельств.
+    </div>
+</div>
+
+<script>
+(function () {
+    function getEl(id) {
+        return document.getElementById(id);
+    }
+
+    function parseNum(raw) {
+        if (raw === null || raw === undefined) {
+            return 0;
+        }
+
+        var s = String(raw).replace(/[^\d]/g, "");
+
+        if (s === "") {
+            return 0;
+        }
+
+        var n = parseInt(s, 10);
+
+        if (isNaN(n)) {
+            return 0;
+        }
+
+        return n;
+    }
+
+    function val(id) {
+        var el = getEl(id);
+        if (!el) {
+            return 0;
+        }
+        return parseNum(el.value);
+    }
+
+    function isChecked(id) {
+        var el = getEl(id);
+        return !!(el && el.checked);
+    }
+
+    function setText(id, text) {
+        var el = getEl(id);
+        if (el) {
+            el.textContent = text;
+        }
+    }
+
+    function setClass(id, cls) {
+        var el = getEl(id);
+        if (el) {
+            el.className = cls;
+        }
+    }
+
+    function formatNumber(value) {
+        value = Math.round(value);
+
+        var negative = value < 0;
+        if (negative) {
+            value = -value;
+        }
+
+        var str = String(value);
+        var result = "";
+        var counter = 0;
+
+        for (var i = str.length - 1; i >= 0; i--) {
+            result = str.charAt(i) + result;
+            counter++;
+
+            if (counter % 3 === 0 && i > 0) {
+                result = " " + result;
+            }
+        }
+
+        return (negative ? "-" : "") + result;
+    }
+
+    function rub(value) {
+        return formatNumber(value) + " ₽";
+    }
+
+    function recalc() {
+        var salary = val("salary");
+        var office = val("office");
+        var transport = val("transport");
+        var phone = val("phone");
+        var cases = val("cases");
+        var avgCourtFee = val("avgCourtFee");
+
+        var taxes = Math.round(salary * 0.3);
+        setText("taxesOut", rub(taxes));
+
+        var courtFeesTotal = avgCourtFee * cases;
+
+        var kmCompensation = 0;
+        if (isChecked("chkKm")) {
+            kmCompensation = val("kmCompensation");
+        }
+
+        var depReturned = 0;
+        var depNotReturned = 0;
+        var depReturnedSum = 0;
+        var depNotReturnedSum = 0;
+
+        if (isChecked("chkDeposit")) {
+            depReturned = val("depReturned");
+            depNotReturned = val("depNotReturned");
+            depReturnedSum = depReturned * 25000;
+            depNotReturnedSum = depNotReturned * 25000;
+        }
+
+        setText("depReturnedHint", "+ " + rub(depReturnedSum) + " — уменьшает расходы");
+        setText("depNotReturnedHint", "− " + rub(depNotReturnedSum) + " — увеличивает расходы");
+
+        var financeCost = 0;
+        if (isChecked("chkFinance")) {
+            financeCost = val("financeCost");
+        }
+
+        var walkersCost = 0;
+        if (isChecked("chkWalkers")) {
+            walkersCost = val("walkersCost");
+        }
+
+        var rewardAmount = 0;
+        if (isChecked("chkReward")) {
+            rewardAmount = val("rewardAmount");
+        }
+
+        var totalExpenses =
+            salary +
+            taxes +
+            office +
+            transport +
+            phone +
+            courtFeesTotal +
+            financeCost +
+            walkersCost +
+            depNotReturnedSum -
+            depReturnedSum -
+            kmCompensation -
+            rewardAmount;
+
+        if (totalExpenses > 0) {
+            setClass("totalExpensesValue", "value red");
+            setText("totalExpensesValue", rub(totalExpenses));
+            setClass("totalExpensesSub", "sub");
+            setText("totalExpensesSub", "расходы минус компенсации и доход");
+        } else if (totalExpenses < 0) {
+            setClass("totalExpensesValue", "value checkmark");
+            setText("totalExpensesValue", "✓");
+            setClass("totalExpensesSub", "sub profit");
+            setText("totalExpensesSub", "ориентировочно Ваш отдел работает в плюс на " + rub(Math.abs(totalExpenses)));
+        } else {
+            setClass("totalExpensesValue", "value green");
+            setText("totalExpensesValue", "0 ₽");
+            setClass("totalExpensesSub", "sub");
+            setText("totalExpensesSub", "расходы равны доходам");
+        }
+
+        var bonusPerCase = 2000;
+        if (cases >= 50) {
+            bonusPerCase = 3000;
+        }
+
+        var bonusTotal = cases * bonusPerCase;
+        var cashback = cases * 4000;
+        var earnArbitrPro = bonusTotal + cashback;
+
+        setText("bonusPerCaseOut", rub(bonusPerCase));
+        setText("bonusTotalOut", rub(bonusTotal));
+        setText("cashbackOut", rub(cashback));
+        setText("earnArbitrProOut", rub(earnArbitrPro));
+        setText("totalEarnings", rub(earnArbitrPro));
+
+        if (totalExpenses > 0) {
+            var lostMoney = totalExpenses + earnArbitrPro;
+
+            setClass("resultBox", "result");
+            setText("resultLabel", "Вы теряете каждый месяц");
+            setText("resultAmount", rub(lostMoney));
+            setText("resultYearly", "За год: " + rub(lostMoney * 12));
+            setText("resultNote", "Это сумма чистых затрат на Ваш отдел АУ + доход, который Вы могли бы получать с АрбитрПро.");
+        } else if (totalExpenses < 0) {
+            var departmentProfit = Math.abs(totalExpenses);
+
+            setClass("resultBox", "result positive");
+
+            if (earnArbitrPro > departmentProfit) {
+                var extraProfit = earnArbitrPro - departmentProfit;
+                setText("resultLabel", "Вы могли бы дополнительно зарабатывать");
+                setText("resultAmount", rub(extraProfit));
+                setText("resultYearly", "За год: " + rub(extraProfit * 12));
+                setText("resultNote", "Ваш отдел уже работает в плюс, но с АрбитрПро Вы могли бы зарабатывать ещё больше.");
+            } else if (earnArbitrPro < departmentProfit) {
+                setText("resultLabel", "Ваш отдел работает в плюс");
+                setText("resultAmount", rub(departmentProfit));
+                setText("resultYearly", "За год: " + rub(departmentProfit * 12));
+                setText("resultNote", "Но при переходе на АрбитрПро Вы сохраните этот плюс и получите дополнительный доход.");
+            } else {
+                setText("resultLabel", "Ваш отдел работает в плюс");
+                setText("resultAmount", rub(departmentProfit));
+                setText("resultYearly", "За год: " + rub(departmentProfit * 12));
+                setText("resultNote", "Доход с АрбитрПро примерно равен текущей плюсовой модели Вашего отдела.");
+            }
+        } else {
+            setClass("resultBox", "result positive");
+            setText("resultLabel", "Ваш отдел работает в ноль");
+            setText("resultAmount", rub(earnArbitrPro));
+            setText("resultYearly", "За год с АрбитрПро: " + rub(earnArbitrPro * 12));
+            setText("resultNote", "При переходе на АрбитрПро Вы начнёте зарабатывать на этом объёме дел.");
+        }
+    }
+
+    function safeRecalc() {
+        try {
+            recalc();
+        } catch (e) {
+            // Молча, чтобы одна ошибка не останавливала калькулятор.
+        }
+    }
+
+    window.safeRecalc = safeRecalc;
+    window.recalc = recalc;
+
+    window.openInBrowser = function () {
+        try {
+            var gate = getEl("browserGate");
+            if (gate) {
+                gate.classList.remove("gate-show");
+            }
+
+            var url = location.href;
+            var ua = navigator.userAgent || "";
+
+            // Попытка 1: window.open
+            try {
+                var w = window.open(url, "_blank");
+                if (w) {
+                    return;
+                }
+            } catch (e1) {}
+
+            // Попытка 2: скрытая ссылка target=_blank
+            try {
+                var a = document.createElement("a");
+                a.href = url;
+                a.target = "_blank";
+                a.rel = "noopener noreferrer";
+                a.style.display = "none";
+                document.body.appendChild(a);
+                a.click();
+
+                setTimeout(function () {
+                    if (a && a.parentNode) {
+                        a.parentNode.removeChild(a);
+                    }
+                }, 120);
+            } catch (e2) {}
+
+            // Попытка 3: Android intent для http/https
+            try {
+                if (/Android/i.test(ua) && /^https?:/i.test(url)) {
+                    var scheme = url.split(":")[0];
+                    var withoutScheme = url.replace(/^https?:\/\//, "");
+                    var intentUrl = "intent://" + withoutScheme + "#Intent;scheme=" + scheme + ";package=com.android.chrome;end";
+                    setTimeout(function () {
+                        location.href = intentUrl;
+                    }, 250);
+                }
+            } catch (e3) {}
+        } catch (e) {
+            // Если совсем не получилось — просто скрываем окно, чтобы не мешать.
+            var gate2 = getEl("browserGate");
+            if (gate2) {
+                gate2.classList.remove("gate-show");
+            }
+        }
+    };
+
+    function isRestrictedWebView() {
+        var ua = navigator.userAgent || "";
+        var protocol = location.protocol || "";
+
+        var isLocal = /^(file|content|blob):/i.test(protocol);
+
+        var isKnownApp = /Telegram|VK|Max|OKApp|WhatsApp|Instagram|FBAN|FBAV|Viber|Line|WebView|wv/i.test(ua);
+
+        var isIOSWebView = /iPhone|iPad|iPod/i.test(ua) && !/Safari/i.test(ua);
+
+        var isAndroidWebView = /Android/i.test(ua) && /wv|WebView/i.test(ua);
+
+        var hasNativeBridge =
+            (window.webkit && window.webkit.messageHandlers) ||
+            window.AndroidBridge ||
+            window.flutter_inappwebview ||
+            window.Cordova ||
+            window.phonegap;
+
+        var isNotRegularBrowser =
+            !/Chrome|Safari|Firefox|Edg|OPR|YaBrowser/i.test(ua);
+
+        return (
+            (isKnownApp && isLocal) ||
+            isIOSWebView ||
+            isAndroidWebView ||
+            hasNativeBridge ||
+            (isLocal && /Mobi|Android|iPhone|iPad|iPod/i.test(ua) && isNotRegularBrowser)
+        );
+    }
+
+    function showGateIfNeeded() {
+        try {
+            if (isRestrictedWebView()) {
+                var gate = getEl("browserGate");
+                if (gate) {
+                    gate.classList.add("gate-show");
+                }
+            }
+        } catch (e) {}
+    }
+
+    safeRecalc();
+    showGateIfNeeded();
+
+    setTimeout(safeRecalc, 50);
+    setTimeout(showGateIfNeeded, 80);
+    setTimeout(safeRecalc, 150);
+    setTimeout(safeRecalc, 350);
+    setTimeout(safeRecalc, 700);
+    setTimeout(safeRecalc, 1200);
+
+    if (document.addEventListener) {
+        var events = [
+            "input",
+            "change",
+            "keyup",
+            "keydown",
+            "keypress",
+            "blur",
+            "focus",
+            "click",
+            "touchend",
+            "pointerup"
+        ];
+
+        for (var i = 0; i < events.length; i++) {
+            document.addEventListener(events[i], safeRecalc, true);
+        }
+
+        window.addEventListener("load", safeRecalc);
+        window.addEventListener("pageshow", safeRecalc);
+        window.addEventListener("focus", safeRecalc);
+    }
+
+    setInterval(safeRecalc, 700);
+})();
+</script>
+
+</body>
+</html>
